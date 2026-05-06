@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MedHide - Admin Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0d1117;
+            --primary-accent: #00f0ff;
+            --secondary-accent: #ff003c;
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --text-main: #ffffff;
+            --text-muted: #8b949e;
+        }
+
+        [data-theme="light"] {
+            --bg-color: #ffffff;
+            --primary-accent: #007bff;
+            --secondary-accent: #dc3545;
+            --card-bg: rgba(0, 0, 0, 0.05);
+            --text-main: #000000;
+            --text-muted: #6c757d;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Dynamic Background */
+        .background-blob {
+            position: absolute;
+            filter: blur(100px);
+            opacity: 0.4;
+            z-index: 0;
+            border-radius: 50%;
+            animation: moveBlobs 20s infinite alternate linear;
+        }
+
+        .blob-1 {
+            width: 400px;
+            height: 400px;
+            background: var(--primary-accent);
+            top: -10%;
+            left: -10%;
+        }
+
+        .blob-2 {
+            width: 500px;
+            height: 500px;
+            background: #8a2be2;
+            bottom: -20%;
+            right: -10%;
+            animation-duration: 25s;
+        }
+
+        @keyframes moveBlobs {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(100px, 100px) scale(1.1); }
+        }
+
+        nav {
+            padding: 2rem 4rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 10;
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            letter-spacing: 2px;
+            background: linear-gradient(45deg, var(--primary-accent), #ffffff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: var(--text-main);
+            text-decoration: none;
+            margin-left: 2rem;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary-accent);
+        }
+
+        .theme-toggle {
+            margin-left: 2rem;
+            background: none;
+            border: none;
+            color: var(--text-main);
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .theme-toggle:hover {
+            color: var(--primary-accent);
+        }
+
+        .container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 4rem 2rem;
+            z-index: 10;
+        }
+
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .dashboard-header h1 {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .dashboard-nav a {
+            color: var(--text-main);
+            text-decoration: none;
+            margin-left: 2rem;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        .dashboard-nav a:hover {
+            color: var(--primary-accent);
+        }
+
+        .section {
+            display: none;
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 3rem;
+            margin-bottom: 2rem;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        .section h2 {
+            margin-bottom: 2rem;
+            color: var(--primary-accent);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 2rem;
+        }
+
+        th, td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        th {
+            font-weight: 600;
+            color: var(--primary-accent);
+        }
+
+        .btn {
+            background: var(--secondary-accent);
+            color: #fff;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .btn:hover {
+            background: #e6002e;
+        }
+    </style>
+</head>
+<body>
+    <div class="background-blob blob-1"></div>
+    <div class="background-blob blob-2"></div>
+
+    <nav>
+        <div class="logo">👑 Admin Portal</div>
+        <div class="nav-links">
+            <a href="/">Home</a>
+            <a href="#employee-section" id="employee-link">Employee</a>
+            <a href="#request-list-section" id="request-list-link">RequestList</a>
+            <a href="#" id="logout-link">Logout</a>
+            <button class="theme-toggle" id="theme-toggle">🌙</button>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- Employee Section -->
+        <div class="section active" id="employee-section">
+            <h2>Employee</h2>
+            <table id="employee-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th>Role</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody id="employee-tbody">
+                    <!-- Employees will be loaded here -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Request List Section -->
+        <div class="section" id="request-list-section">
+            <h2>Request List</h2>
+            <table id="request-list-table">
+                <thead>
+                    <tr>
+                        <th>FID</th>
+                        <th>FNAME</th>
+                        <th>OWNER NAME</th>
+                        <th>RID</th>
+                        <th>RNAME</th>
+                        <th>REMAIL</th>
+                        <th>DATE</th>
+                        <th>STATUS</th>
+                        <th>ACTION</th>
+                    </tr>
+                </thead>
+                <tbody id="request-list-tbody">
+                    <!-- Requests will be loaded here -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        const themeToggle = document.getElementById('theme-toggle');
+        const body = document.body;
+        const logoutLink = document.getElementById('logout-link');
+        const employeeLink = document.getElementById('employee-link');
+        const requestListLink = document.getElementById('request-list-link');
+        const sections = document.querySelectorAll('.section');
+
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = body.getAttribute('data-theme');
+            if (currentTheme === 'light') {
+                body.removeAttribute('data-theme');
+                themeToggle.textContent = '🌙';
+                localStorage.setItem('theme', 'dark');
+            } else {
+                body.setAttribute('data-theme', 'light');
+                themeToggle.textContent = '☀️';
+                localStorage.setItem('theme', 'light');
+            }
+        });
+
+        // Load saved theme
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'light') {
+            body.setAttribute('data-theme', 'light');
+            themeToggle.textContent = '☀️';
+        }
+
+        function showSection(sectionId) {
+            sections.forEach(section => section.classList.remove('active'));
+            document.getElementById(sectionId).classList.add('active');
+        }
+
+        employeeLink.addEventListener('click', () => showSection('employee-section'));
+        requestListLink.addEventListener('click', () => showSection('request-list-section'));
+
+        logoutLink.addEventListener('click', () => {
+            localStorage.removeItem('role');
+            window.location.href = '/';
+        });
+
+        // Load employees
+        async function loadEmployees() {
+            try {
+                const response = await fetch('/api/admin/employees');
+                if (response.ok) {
+                    const employees = await response.json();
+                    const tbody = document.getElementById('employee-tbody');
+                    tbody.innerHTML = '';
+                    employees.forEach(emp => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${emp.id}</td>
+                            <td>${emp.username}</td>
+                            <td>${emp.email}</td>
+                            <td>${emp.phone}</td>
+                            <td>${emp.role}</td>
+                            <td>${emp.status}</td>
+                        `;
+                        tbody.appendChild(row);
+                    });
+                }
+            } catch (error) {
+                console.error('Error loading employees:', error);
+            }
+        }
+
+        // Load request list
+        async function loadRequestList() {
+            try {
+                const response = await fetch('/api/admin/requests');
+                if (response.ok) {
+                    const requests = await response.json();
+                    const tbody = document.getElementById('request-list-tbody');
+                    tbody.innerHTML = '';
+                    requests.forEach(req => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${req.fid}</td>
+                            <td>${req.fname}</td>
+                            <td>${req.owner_name}</td>
+                            <td>${req.rid}</td>
+                            <td>${req.rname}</td>
+                            <td>${req.remail}</td>
+                            <td>${new Date(req.date).toLocaleDateString()}</td>
+                            <td>${req.status}</td>
+                            <td><button class="btn send-key-btn" data-fid="${req.fid}" data-rid="${req.rid}">Send Key</button></td>
+                        `;
+                        tbody.appendChild(row);
+                    });
+
+                    // Add event listeners to send key buttons
+                    document.querySelectorAll('.send-key-btn').forEach(btn => {
+                        btn.addEventListener('click', async (e) => {
+                            const fid = e.target.getAttribute('data-fid');
+                            const rid = e.target.getAttribute('data-rid');
+                            try {
+                                const response = await fetch('/api/admin/send-key', {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json'
+                                    },
+                                    body: JSON.stringify({ fid, rid })
+                                });
+                                if (response.ok) {
+                                    alert('Key sent successfully');
+                                    e.target.disabled = true;
+                                    e.target.textContent = 'Sent';
+                                } else {
+                                    alert('Failed to send key');
+                                }
+                            } catch (error) {
+                                alert('Error: ' + error.message);
+                            }
+                        });
+                    });
+                }
+            } catch (error) {
+                console.error('Error loading request list:', error);
+            }
+        }
+
+        // Initial load
+        loadEmployees();
+        loadRequestList();
+    </script>
+</body>
+</html>

@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MedHide - Staff Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0d1117;
+            --primary-accent: #00f0ff;
+            --secondary-accent: #ff003c;
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --text-main: #ffffff;
+            --text-muted: #8b949e;
+        }
+
+        [data-theme="light"] {
+            --bg-color: #ffffff;
+            --primary-accent: #007bff;
+            --secondary-accent: #dc3545;
+            --card-bg: rgba(0, 0, 0, 0.05);
+            --text-main: #000000;
+            --text-muted: #6c757d;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Dynamic Background */
+        .background-blob {
+            position: absolute;
+            filter: blur(100px);
+            opacity: 0.4;
+            z-index: 0;
+            border-radius: 50%;
+            animation: moveBlobs 20s infinite alternate linear;
+        }
+
+        .blob-1 {
+            width: 400px;
+            height: 400px;
+            background: var(--primary-accent);
+            top: -10%;
+            left: -10%;
+        }
+
+        .blob-2 {
+            width: 500px;
+            height: 500px;
+            background: #8a2be2;
+            bottom: -20%;
+            right: -10%;
+            animation-duration: 25s;
+        }
+
+        @keyframes moveBlobs {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(100px, 100px) scale(1.1); }
+        }
+
+        nav {
+            padding: 2rem 4rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 10;
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            letter-spacing: 2px;
+            background: linear-gradient(45deg, var(--primary-accent), #ffffff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: var(--text-main);
+            text-decoration: none;
+            margin-left: 2rem;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary-accent);
+        }
+
+        .theme-toggle {
+            margin-left: 2rem;
+            background: none;
+            border: none;
+            color: var(--text-main);
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .theme-toggle:hover {
+            color: var(--primary-accent);
+        }
+
+        .container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 4rem 2rem;
+            z-index: 10;
+        }
+
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .dashboard-header h1 {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .dashboard-nav a {
+            color: var(--text-main);
+            text-decoration: none;
+            margin-left: 2rem;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        .dashboard-nav a:hover {
+            color: var(--primary-accent);
+        }
+
+        .section {
+            display: none;
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 3rem;
+            margin-bottom: 2rem;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        .section h2 {
+            margin-bottom: 2rem;
+            color: var(--primary-accent);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 2rem;
+        }
+
+        th, td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        th {
+            font-weight: 600;
+            color: var(--primary-accent);
+        }
+
+        .btn {
+            background: var(--primary-accent);
+            color: #000;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .btn:hover {
+            background: #00d4ff;
+        }
+
+        .btn:disabled {
+            background: var(--text-muted);
+            cursor: not-allowed;
+        }
+
+        .key-input {
+            width: 100%;
+            padding: 0.5rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 5px;
+            color: var(--text-main);
+        }
+
+        .output-table {
+            display: none;
+        }
+
+        .output-table.active {
+            display: table;
+        }
+    </style>
+</head>
+<body>
+    <div class="background-blob blob-1"></div>
+    <div class="background-blob blob-2"></div>
+
+    <nav>
+        <div class="logo">👩‍💼 Staff Portal</div>
+        <div class="nav-links">
+            <a href="/">Home</a>
+            <a href="#files-section" id="files-link">Files</a>
+            <a href="#request-section" id="request-link">Request</a>
+            <a href="#decrypt-section" id="decrypt-link">Decrypt</a>
+            <a href="#upload-section" id="upload-link">Upload</a>
+            <a href="#" id="logout-link">Logout</a>
+            <button class="theme-toggle" id="theme-toggle">🌙</button>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- Files Section -->
+        <div class="section active" id="files-section">
+            <h2>Files</h2>
+            <table id="files-table">
+                <thead>
+                    <tr>
+                        <th>LID</th>
+                        <th>LNAME</th>
+                        <th>LEMAIL</th>
+                        <th>ROLE</th>
+                        <th>FILEID</th>
+                        <th>FNAME</th>
+                        <th>DATE</th>
+                        <th>ACTION</th>
+                    </tr>
+                </thead>
+                <tbody id="files-tbody">
+                    <!-- Files will be loaded here -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Request Section -->
+        <div class="section" id="request-section">
+            <h2>Request</h2>
+            <table id="request-table">
+                <thead>
+                    <tr>
+                        <th>LID</th>
+                        <th>LNAME</th>
+                        <th>LEMAIL</th>
+                        <th>ROLE</th>
+                        <th>FILEID</th>
+                        <th>FNAME</th>
+                        <th>DATE</th>
+                        <th>STATUS</th>
+                    </tr>
+                </thead>
+                <tbody id="request-tbody">
+                    <!-- Requested files will be loaded here -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Decrypt Section -->
+        <div class="section" id="decrypt-section">
+            <h2>Decrypt</h2>
+            <table id="decrypt-table">
+                <thead>
+                    <tr>
+                        <th>File Name</th>
+                        <th>File ID</th>
+                        <th>Name</th>
+                        <th>ID</th>
+                        <th>Date</th>
+                        <th>Status</th>
+                        <th>Key</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="decrypt-tbody">
+                    <!-- Decrypt table will be loaded here -->
+                </tbody>
+            </table>
+
+            <!-- Output Table -->
+            <table class="output-table" id="output-table">
+                <thead>
+                    <tr>
+                        <th>FID</th>
+                        <th>FNAME</th>
+                        <th>IMAGE</th>
+                        <th>DATA</th>
+                    </tr>
+                </thead>
+                <tbody id="output-tbody">
+                    <!-- Decrypted data will be shown here -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Upload Section -->
+        <div class="section" id="upload-section">
+            <h2>Upload</h2>
+            <p>Upload functionality for staff.</p>
+        </div>
+    </div>
+
+    <script>
+        const themeToggle = document.getElementById('theme-toggle');
+        const body = document.body;
+        const logoutLink = document.getElementById('logout-link');
+        const filesLink = document.getElementById('files-link');
+        const requestLink = document.getElementById('request-link');
+        const decryptLink = document.getElementById('decrypt-link');
+        const uploadLink = document.getElementById('upload-link');
+        const sections = document.querySelectorAll('.section');
+
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = body.getAttribute('data-theme');
+            if (currentTheme === 'light') {
+                body.removeAttribute('data-theme');
+                themeToggle.textContent = '🌙';
+                localStorage.setItem('theme', 'dark');
+            } else {
+                body.setAttribute('data-theme', 'light');
+                themeToggle.textContent = '☀️';
+                localStorage.setItem('theme', 'light');
+            }
+        });
+
+        // Load saved theme
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'light') {
+            body.setAttribute('data-theme', 'light');
+            themeToggle.textContent = '☀️';
+        }
+
+        function showSection(sectionId) {
+            sections.forEach(section => section.classList.remove('active'));
+            document.getElementById(sectionId).classList.add('active');
+        }
+
+        filesLink.addEventListener('click', () => showSection('files-section'));
+        requestLink.addEventListener('click', () => showSection('request-section'));
+        decryptLink.addEventListener('click', () => showSection('decrypt-section'));
+        uploadLink.addEventListener('click', () => showSection('upload-section'));
+
+        logoutLink.addEventListener('click', () => {
+            localStorage.removeItem('token');
+            localStorage.removeItem('role');
+            window.location.href = '/';
+        });
+
+        // Load files
+        async function loadFiles() {
+            try {
+                const response = await fetch('/api/files', {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    }
+                });
+                if (response.ok) {
+                    const files = await response.json();
+                    const tbody = document.getElementById('files-tbody');
+                    tbody.innerHTML = '';
+                    files.forEach(file => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${file.lab_id}</td>
+                            <td>${file.lab_name}</td>
+                            <td>${file.lab_email}</td>
+                            <td>${file.role}</td>
+                            <td>${file.file_id}</td>
+                            <td>${file.file_name}</td>
+                            <td>${new Date(file.date).toLocaleDateString()}</td>
+                            <td><button class="btn request-btn" data-file-id="${file.file_id}">Request</button></td>
+                        `;
+                        tbody.appendChild(row);
+                    });
+
+                    // Add event listeners to request buttons
+                    document.querySelectorAll('.request-btn').forEach(btn => {
+                        btn.addEventListener('click', async (e) => {
+                            const fileId = e.target.getAttribute('data-file-id');
+                            try {
+                                const response = await fetch('/api/request', {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                                    },
+                                    body: JSON.stringify({ file_id: fileId })
+                                });
+                                if (response.ok) {
+                                    alert('Request sent');
+                                    // Add status column
+                                    const row = e.target.closest('tr');
+                                    if (row.cells.length === 8) {
+                                        const statusCell = document.createElement('td');
+                                        statusCell.textContent = 'Pending';
+                                        row.appendChild(statusCell);
+                                    }
+                                } else {
+                                    alert('Request failed');
+                                }
+                            } catch (error) {
+                                alert('Error: ' + error.message);
+                            }
+                        });
+                    });
+                }
+            } catch (error) {
+                console.error('Error loading files:', error);
+            }
+        }
+
+        // Load requests
+        async function loadRequests() {
+            try {
+                const response = await fetch('/api/requests', {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    }
+                });
+                if (response.ok) {
+                    const requests = await response.json();
+                    const tbody = document.getElementById('request-tbody');
+                    tbody.innerHTML = '';
+                    requests.forEach(req => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${req.owner_id}</td>
+                            <td>${req.owner_name}</td>
+                            <td>${req.owner_email}</td>
+                            <td>lab</td>
+                            <td>${req.fid}</td>
+                            <td>${req.fname}</td>
+                            <td>${new Date(req.date).toLocaleDateString()}</td>
+                            <td>${req.status}</td>
+                        `;
+                        tbody.appendChild(row);
+                    });
+                }
+            } catch (error) {
+                console.error('Error loading requests:', error);
+            }
+        }
+
+        // Load decrypt table
+        async function loadDecryptTable() {
+            try {
+                const response = await fetch('/api/requests', {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    }
+                });
+                if (response.ok) {
+                    const requests = await response.json();
+                    const approvedRequests = requests.filter(req => req.status === 'approved');
+                    const tbody = document.getElementById('decrypt-tbody');
+                    tbody.innerHTML = '';
+                    approvedRequests.forEach(req => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${req.fname}</td>
+                            <td>${req.fid}</td>
+                            <td>${req.rname}</td>
+                            <td>${req.rid}</td>
+                            <td>${new Date(req.date).toLocaleDateString()}</td>
+                            <td>${req.status}</td>
+                            <td><input type="text" class="key-input" placeholder="Enter key"></td>
+                            <td><button class="btn decrypt-btn">Decrypt</button></td>
+                        `;
+                        tbody.appendChild(row);
+                    });
+
+                    // Add decrypt event listeners
+                    document.querySelectorAll('.decrypt-btn').forEach((btn, index) => {
+                        btn.addEventListener('click', async () => {
+                            const row = btn.closest('tr');
+                            const fileId = row.cells[1].textContent;
+                            const keyInput = row.querySelector('.key-input');
+                            const key = keyInput.value;
+                            if (!key) {
+                                alert('Please enter the key');
+                                return;
+                            }
+                            try {
+                                const response = await fetch('/api/decrypt', {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                                    },
+                                    body: JSON.stringify({ file_id: fileId, key: key })
+                                });
+                                if (response.ok) {
+                                    const data = await response.json();
+                                    // Show output table
+                                    const outputTbody = document.getElementById('output-tbody');
+                                    outputTbody.innerHTML = `
+                                        <tr>
+                                            <td>${data.fid}</td>
+                                            <td>${data.fname}</td>
+                                            <td><img src="${data.image}" alt="Stego Image" style="max-width: 200px;"></td>
+                                            <td>${data.data}</td>
+                                        </tr>
+                                    `;
+                                    document.getElementById('output-table').classList.add('active');
+                                } else {
+                                    alert('Decryption failed');
+                                }
+                            } catch (error) {
+                                alert('Error: ' + error.message);
+                            }
+                        });
+                    });
+                }
+            } catch (error) {
+                console.error('Error loading decrypt table:', error);
+            }
+        }
+
+        // Initial load
+        loadFiles();
+        loadRequests();
+        loadDecryptTable();
+    </script>
+</body>
+</html>

@@ -1,0 +1,15 @@
+fastapi
+uvicorn
+cryptography
+stegano
+Pillow
+numpy
+scipy
+pydantic
+python-multipart
+pymongo
+pyserial
+pytest
+jinja2
+bcrypt
+python-jose[cryptography]

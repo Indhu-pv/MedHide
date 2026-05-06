@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MedHide - Login & Registration</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0d1117;
+            --primary-accent: #00f0ff;
+            --secondary-accent: #ff003c;
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --text-main: #ffffff;
+            --text-muted: #8b949e;
+        }
+
+        [data-theme="light"] {
+            --bg-color: #ffffff;
+            --primary-accent: #007bff;
+            --secondary-accent: #dc3545;
+            --card-bg: rgba(0, 0, 0, 0.05);
+            --text-main: #000000;
+            --text-muted: #6c757d;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Dynamic Background */
+        .background-blob {
+            position: absolute;
+            filter: blur(100px);
+            opacity: 0.4;
+            z-index: 0;
+            border-radius: 50%;
+            animation: moveBlobs 20s infinite alternate linear;
+        }
+
+        .blob-1 {
+            width: 400px;
+            height: 400px;
+            background: var(--primary-accent);
+            top: -10%;
+            left: -10%;
+        }
+
+        .blob-2 {
+            width: 500px;
+            height: 500px;
+            background: #8a2be2;
+            bottom: -20%;
+            right: -10%;
+            animation-duration: 25s;
+        }
+
+        @keyframes moveBlobs {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(100px, 100px) scale(1.1); }
+        }
+
+        nav {
+            padding: 2rem 4rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 10;
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            letter-spacing: 2px;
+            background: linear-gradient(45deg, var(--primary-accent), #ffffff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: var(--text-main);
+            text-decoration: none;
+            margin-left: 2rem;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary-accent);
+        }
+
+        .theme-toggle {
+            margin-left: 2rem;
+            background: none;
+            border: none;
+            color: var(--text-main);
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .theme-toggle:hover {
+            color: var(--primary-accent);
+        }
+
+        .container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            padding: 2rem 2rem 4rem;
+            z-index: 10;
+        }
+
+        .form-container {
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 3rem;
+            width: 100%;
+            max-width: 500px;
+            text-align: center;
+        }
+
+        .form-container h2 {
+            margin-bottom: 2rem;
+            color: var(--primary-accent);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.75rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            color: var(--text-main);
+            font-family: inherit;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary-accent);
+        }
+
+        .btn {
+            background: var(--primary-accent);
+            color: #000;
+            border: none;
+            padding: 0.75rem 2rem;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            margin-top: 1rem;
+        }
+
+        .btn:hover {
+            background: #00d4ff;
+        }
+
+        .link {
+            color: var(--primary-accent);
+            text-decoration: none;
+            margin-top: 1rem;
+            display: inline-block;
+        }
+
+        .link:hover {
+            text-decoration: underline;
+        }
+
+        .toggle-form {
+            margin-top: 2rem;
+            color: var(--text-muted);
+        }
+
+        .toggle-form a {
+            color: var(--primary-accent);
+            text-decoration: none;
+        }
+
+        .toggle-form a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="background-blob blob-1"></div>
+    <div class="background-blob blob-2"></div>
+
+    <nav>
+        <div class="logo">🚀 MedHide Portal</div>
+        <div class="nav-links">
+            <a href="/">Home</a>
+            <a href="#register-form" id="nav-register-link">Register</a>
+            <a href="#login-form" id="nav-login-link">Login</a>
+            <button class="theme-toggle" id="theme-toggle">🌙</button>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="form-container">
+            <h2 id="form-title">Register to MedHide</h2>
+            
+            <!-- Registration Form -->
+            <form id="register-form" style="display: block;">
+                <div class="form-group">
+                    <label for="reg-id">ID Number</label>
+                    <input type="text" id="reg-id" required>
+                </div>
+                <div class="form-group">
+                    <label for="reg-username">Username</label>
+                    <input type="text" id="reg-username" required>
+                </div>
+                <div class="form-group">
+                    <label for="reg-email">Email</label>
+                    <input type="email" id="reg-email" required>
+                </div>
+                <div class="form-group">
+                    <label for="reg-phone">Phone Number</label>
+                    <input type="tel" id="reg-phone" required>
+                </div>
+                <div class="form-group">
+                    <label for="reg-password">Password</label>
+                    <input type="password" id="reg-password" required>
+                </div>
+                <div class="form-group">
+                    <label for="reg-confirm-password">Confirm Password</label>
+                    <input type="password" id="reg-confirm-password" required>
+                </div>
+                <div class="form-group">
+                    <label for="reg-role">Role</label>
+                    <select id="reg-role" required>
+                        <option value="lab">Lab</option>
+                        <option value="doctor">Doctor</option>
+                        <option value="staff">Staff</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn">Register</button>
+            </form>
+
+            <!-- Login Form -->
+            <form id="login-form" style="display: none;">
+                <div class="form-group">
+                    <label for="login-email">Email</label>
+                    <input type="email" id="login-email" required>
+                </div>
+                <div class="form-group">
+                    <label for="login-password">Password</label>
+                    <input type="password" id="login-password" required>
+                </div>
+                <button type="submit" class="btn">Login</button>
+                <a href="#" class="link">Forgot your password?</a>
+            </form>
+
+            <div class="toggle-form">
+                <span id="toggle-text">Already have an account? <a href="#" id="toggle-link">Login</a></span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const themeToggle = document.getElementById('theme-toggle');
+        const body = document.body;
+        const registerForm = document.getElementById('register-form');
+        const loginForm = document.getElementById('login-form');
+        const toggleLink = document.getElementById('toggle-link');
+        const toggleText = document.getElementById('toggle-text');
+        const formTitle = document.getElementById('form-title');
+        const navRegisterLink = document.getElementById('nav-register-link');
+        const navLoginLink = document.getElementById('nav-login-link');
+
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = body.getAttribute('data-theme');
+            if (currentTheme === 'light') {
+                body.removeAttribute('data-theme');
+                themeToggle.textContent = '🌙';
+                localStorage.setItem('theme', 'dark');
+            } else {
+                body.setAttribute('data-theme', 'light');
+                themeToggle.textContent = '☀️';
+                localStorage.setItem('theme', 'light');
+            }
+        });
+
+        // Load saved theme
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'light') {
+            body.setAttribute('data-theme', 'light');
+            themeToggle.textContent = '☀️';
+        }
+
+        let isRegister = true;
+
+        function updateToggleText() {
+            if (isRegister) {
+                formTitle.textContent = 'Register to MedHide';
+                toggleText.innerHTML = 'Already have an account? <a href="#" id="toggle-link">Login</a>';
+            } else {
+                formTitle.textContent = 'Login to MedHide';
+                toggleText.innerHTML = 'Don\'t have an account? <a href="#" id="toggle-link">Register</a>';
+            }
+            const newToggleLink = document.getElementById('toggle-link');
+            if (newToggleLink) {
+                newToggleLink.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    toggleMode();
+                });
+            }
+        }
+
+        function setMode(registerMode) {
+            isRegister = registerMode;
+            if (isRegister) {
+                registerForm.style.display = 'block';
+                loginForm.style.display = 'none';
+            } else {
+                registerForm.style.display = 'none';
+                loginForm.style.display = 'block';
+            }
+            updateToggleText();
+        }
+
+        function toggleMode() {
+            setMode(!isRegister);
+        }
+
+        navRegisterLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            setMode(true);
+            registerForm.scrollIntoView({ behavior: 'smooth' });
+        });
+
+        navLoginLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            setMode(false);
+            loginForm.scrollIntoView({ behavior: 'smooth' });
+        });
+
+        updateToggleText();
+
+        // Handle registration
+        registerForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData(registerForm);
+            const data = Object.fromEntries(formData);
+            data.id = document.getElementById('reg-id').value;
+            data.username = document.getElementById('reg-username').value;
+            data.email = document.getElementById('reg-email').value;
+            data.phone = document.getElementById('reg-phone').value;
+            data.password = document.getElementById('reg-password').value;
+            data.confirmPassword = document.getElementById('reg-confirm-password').value;
+            data.role = document.getElementById('reg-role').value;
+
+            if (data.password !== data.confirmPassword) {
+                alert('Passwords do not match');
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                if (response.ok) {
+                    alert('Registration successful');
+                    registerForm.style.display = 'none';
+                    loginForm.style.display = 'block';
+                    isRegister = false;
+                    updateToggleText();
+                } else {
+                    const error = await response.json();
+                    alert(error.detail || 'Registration failed');
+                }
+            } catch (error) {
+                alert('Error: ' + error.message);
+            }
+        });
+
+        // Handle login
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+
+            try {
+                const response = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+                if (response.ok) {
+                    const data = await response.json();
+                    localStorage.setItem('token', data.token);
+                    localStorage.setItem('role', data.role);
+                    // Redirect based on role
+                    if (data.role === 'lab') window.location.href = '/lab/dashboard';
+                    else if (data.role === 'doctor') window.location.href = '/doctor/dashboard';
+                    else if (data.role === 'staff') window.location.href = '/staff/dashboard';
+                    else if (data.role === 'admin') window.location.href = '/admin/dashboard';
+                } else {
+                    const error = await response.json();
+                    alert(error.detail || 'Login failed');
+                }
+            } catch (error) {
+                alert('Error: ' + error.message);
+            }
+        });
+    </script>
+</body>
+</html>

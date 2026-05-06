@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MedHide - Lab Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0d1117;
+            --primary-accent: #00f0ff;
+            --secondary-accent: #ff003c;
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --text-main: #ffffff;
+            --text-muted: #8b949e;
+        }
+
+        [data-theme="light"] {
+            --bg-color: #ffffff;
+            --primary-accent: #007bff;
+            --secondary-accent: #dc3545;
+            --card-bg: rgba(0, 0, 0, 0.05);
+            --text-main: #000000;
+            --text-muted: #6c757d;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Dynamic Background */
+        .background-blob {
+            position: absolute;
+            filter: blur(100px);
+            opacity: 0.4;
+            z-index: 0;
+            border-radius: 50%;
+            animation: moveBlobs 20s infinite alternate linear;
+        }
+
+        .blob-1 {
+            width: 400px;
+            height: 400px;
+            background: var(--primary-accent);
+            top: -10%;
+            left: -10%;
+        }
+
+        .blob-2 {
+            width: 500px;
+            height: 500px;
+            background: #8a2be2;
+            bottom: -20%;
+            right: -10%;
+            animation-duration: 25s;
+        }
+
+        @keyframes moveBlobs {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(100px, 100px) scale(1.1); }
+        }
+
+        nav {
+            padding: 2rem 4rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 10;
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            letter-spacing: 2px;
+            background: linear-gradient(45deg, var(--primary-accent), #ffffff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: var(--text-main);
+            text-decoration: none;
+            margin-left: 2rem;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary-accent);
+        }
+
+        .theme-toggle {
+            margin-left: 2rem;
+            background: none;
+            border: none;
+            color: var(--text-main);
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .theme-toggle:hover {
+            color: var(--primary-accent);
+        }
+
+        .container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 4rem 2rem;
+            z-index: 10;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+        }
+
+        .nav-links a,
+        .nav-links button {
+            color: var(--text-main);
+            text-decoration: none;
+            margin-left: 1rem;
+            font-weight: 600;
+            background: none;
+            border: none;
+            cursor: pointer;
+            transition: color 0.3s ease;
+            font-family: inherit;
+        }
+
+        .nav-links a:hover,
+        .nav-links button:hover {
+            color: var(--primary-accent);
+        }
+
+        .container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 2rem 2rem;
+            z-index: 10;
+        }
+
+        .upload-form {
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 3rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .upload-form h2 {
+            margin-bottom: 2rem;
+            color: var(--primary-accent);
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.75rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            color: var(--text-main);
+            font-family: inherit;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary-accent);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .btn {
+            background: var(--primary-accent);
+            color: #000;
+            border: none;
+            padding: 0.75rem 2rem;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            margin-top: 1rem;
+        }
+
+        .btn:hover {
+            background: #00d4ff;
+        }
+
+        .btn:disabled {
+            background: var(--text-muted);
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+    <div class="background-blob blob-1"></div>
+    <div class="background-blob blob-2"></div>
+
+    <nav>
+        <div class="logo">🧪 Lab Portal</div>
+        <div class="nav-links">
+            <a href="/">Home</a>
+            <a href="#upload-form" id="upload-link">Upload</a>
+            <a href="#" id="logout-link">Logout</a>
+            <button class="theme-toggle" id="theme-toggle">🌙</button>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="upload-form" id="upload-form">
+            <h2>Upload File</h2>
+            <form id="file-upload-form">
+                <div class="form-group">
+                    <label for="file-id">File ID</label>
+                    <input type="text" id="file-id" required>
+                </div>
+                <div class="form-group">
+                    <label for="file-name">File Name</label>
+                    <input type="text" id="file-name" required>
+                </div>
+                <div class="form-group">
+                    <label for="file-upload">File Upload</label>
+                    <input type="file" id="file-upload" accept="image/*" required>
+                </div>
+                <div class="form-group">
+                    <label for="message">Message to Hide</label>
+                    <textarea id="message" placeholder="Type message to hide" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="key">Key</label>
+                    <input type="text" id="key" placeholder="16-character alphanumeric key" maxlength="16" readonly required>
+                </div>
+                <button type="submit" class="btn" id="encrypt-btn">Encrypt</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const themeToggle = document.getElementById('theme-toggle');
+        const body = document.body;
+        const logoutLink = document.getElementById('logout-link');
+        const keyInput = document.getElementById('key');
+        const fileIdInput = document.getElementById('file-id');
+        const fileNameInput = document.getElementById('file-name');
+        const messageTextarea = document.getElementById('message');
+
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = body.getAttribute('data-theme');
+            if (currentTheme === 'light') {
+                body.removeAttribute('data-theme');
+                themeToggle.textContent = '🌙';
+                localStorage.setItem('theme', 'dark');
+            } else {
+                body.setAttribute('data-theme', 'light');
+                themeToggle.textContent = '☀️';
+                localStorage.setItem('theme', 'light');
+            }
+        });
+
+        // Load saved theme
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'light') {
+            body.setAttribute('data-theme', 'light');
+            themeToggle.textContent = '☀️';
+        }
+
+        // Generate key when form is filled
+        function generateKey() {
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+            let key = '';
+            for (let i = 0; i < 16; i++) {
+                key += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            return key;
+        }
+
+        function updateKey() {
+            if (fileIdInput.value && fileNameInput.value && messageTextarea.value) {
+                keyInput.value = generateKey();
+            }
+        }
+
+        fileIdInput.addEventListener('input', updateKey);
+        fileNameInput.addEventListener('input', updateKey);
+        messageTextarea.addEventListener('input', updateKey);
+
+        logoutLink.addEventListener('click', () => {
+            localStorage.removeItem('token');
+            localStorage.removeItem('role');
+            window.location.href = '/';
+        });
+
+        // Handle form submission
+        document.getElementById('file-upload-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const encryptBtn = document.getElementById('encrypt-btn');
+            encryptBtn.disabled = true;
+            encryptBtn.textContent = 'Encrypting...';
+
+            const formData = new FormData();
+            formData.append('file_id', fileIdInput.value);
+            formData.append('file_name', fileNameInput.value);
+            formData.append('file', document.getElementById('file-upload').files[0]);
+            formData.append('message', messageTextarea.value);
+            formData.append('key', keyInput.value);
+
+            try {
+                const response = await fetch('/api/lab/upload', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    },
+                    body: formData
+                });
+                if (response.ok) {
+                    alert('Data encrypted and stored successfully');
+                    localStorage.removeItem('token');
+                    localStorage.removeItem('role');
+                    window.location.href = '/lab';
+                } else {
+                    const contentType = response.headers.get('content-type') || '';
+                    let errorMessage = 'Upload failed';
+                    if (contentType.includes('application/json')) {
+                        const error = await response.json();
+                        errorMessage = error.detail || error.message || JSON.stringify(error);
+                    } else {
+                        errorMessage = await response.text();
+                    }
+                    alert(errorMessage);
+                }
+            } catch (error) {
+                alert('Error: ' + error.message);
+            } finally {
+                encryptBtn.disabled = false;
+                encryptBtn.textContent = 'Encrypt';
+            }
+        });
+    </script>
+</body>
+</html>
