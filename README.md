@@ -8,7 +8,7 @@
 
 ## 👥 Team & Project Info
 - **Team Name:** MedHide
-- **Institute:** Velammal Engineering College, Bengaluru
+- **Institute:** Velammal Engineering College, Chennai
 - **Theme:** Health & Inclusivity
 - **Domain:** Secure Medical Data Storage & Transfer
 - **Hackathon:** CMRIT Hackathon, Bengaluru
